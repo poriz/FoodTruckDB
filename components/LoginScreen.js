@@ -1,135 +1,45 @@
-import React, {useState } from 'react';
-import {Button, StyleSheet, Text, TextInput, View,Alert, Modal, KeyboardAvoidingView, } from 'react-native';
+import React, { Component,useState } from 'react';
+import {Button, StyleSheet, Text, TextInput, View,TouchableOpacity} from 'react-native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Checkbox from "expo-checkbox";
 
-import {app} from '../config/keys'
-import {
-  getAuth,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  signOut, 
-} from 'firebase/auth';
+const Stack = createNativeStackNavigator();
 
-const auth = getAuth(app);
 
-export default function LoginScreen({navigation}) {
-
-// Listen for authentication state to change.
-  onAuthStateChanged(auth, user => {
-    if (user != null) {
-        console.log("Logged in with user: ", user.email);
-        changePage(C_user)
-        
-    }
-    else 
-        console.log('Not logged in')
-   });
-//email connection
-  const [C_user,setC_user] = useState()
-
-  const [value,setValue] = useState({
-    ID:"",
-    PW:"",
-    error:""
-  })
-  const {
-      ID,PW
-  } = value
-
-  const onChange = (keyvalue, e) => {
-    setValue({
-      ...value, 
-      [keyvalue]: e 
-    });
-  };
-
-  async function signIn() {
-    if (value.ID === '' || value.PW === '') {
-      setValue({
-        ...value,
-        error: 'Email and password are mandatory.'
-      })
-      return;
-    }
-
-    try {
-      await signInWithEmailAndPassword(auth, value.ID, value.PW)
-      setC_user(auth.currentUser)
-      console.log("loged in")
-      
-    } catch (error) {
-      setValue({
-        ...value,
-        error: error.message,
-      },
-      console.log(error)
-      )
-    }
-  }
-
+export default function  LoginScreen() {
+  const [userID,setUserID] = useState('');
+  const [userPW,setUserPW] = useState('')
   const [agree, setAgree] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
 
-  const changePage = (C_user1) => {
-    if (C_user1 != null){
-      navigation.reset({
-        index:0,
-        routes:[{name:'Map'}],
-      })
-      //현재 사용 유저의 이메일
-      console.log(C_user.email)
-    }
-  } 
-  
     return(
-      <View>
-    <View>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}
-        >
-          <KeyboardAvoidingView 
-              behavior = 'height' 
-              style={styles.modalView}>
-          <View>
-            <TextInput
-              style = {styles.textInput}
-              onChangeText = {(e)=>onChange("ID",e)}
-              value = {ID}
-              placeholder= 'ID'/>
-            <TextInput
-              style = {styles.textInput}
-              onChangeText = {(e)=>onChange("PW",e)}
-              value = {PW}
-              //secureTextEntry={true}
-              placeholder= 'password'/>
-            
-            <View style={styles.checkboxstyle}>
-            <Checkbox
-              value={agree}
-              onValueChange={()=> setAgree(!agree)}
-              color={agree ? "#4630EB": undefined}     
-              />
-              <Text style = {styles.Textstyle}>Remember me?</Text>
-              <Text style = {styles.Textstyle2}>Forgot Password</Text>
-            </View>
-              <Button style = {styles.buttonstyle} title = "signin" onPress={() => [setModalVisible(!modalVisible),signIn()]} />
-            </View>
-          </KeyboardAvoidingView>
-        </Modal>
+    <View style = {styles.container}>
+        <View style ={styles.bodyContainer}>
+        <TextInput
+          style = {styles.textInput}
+          onchangeText = {(userID) => setUserID(userID)}
+          placeholder= 'ID'/>
+        <TextInput
+          style = {styles.textInput}
+          onchangeText = {(userPW) => setUserPW(userPW)}
+          placeholder= 'password'/>
+        
+        <View style={styles.checkboxstyle}>
+        <Checkbox
+          value={agree}
+          onValueChange={()=> setAgree(!agree)}
+          color={agree ? "#4630EB": undefined}     
+          />
+          <Text style = {styles.Textstyle}>Remember me?</Text>
+          <Text style = {styles.Textstyle2}>Forgot Password</Text>
+        </View>
+        
+        </View>
+        <Button style = {styles.buttonstyle} title = "submit" />
     </View>
 
-    <View style ={styles.Buttons}>
-      <Button style = {styles.buttonstyle} title = "e-mail login" onPress={() => [setModalVisible(!modalVisible)]} />
-      <Button style = {styles.buttonstyle} title = "signout" onPress={()=>[signOut(auth),]} />
-    </View>
-    </View>
     )
 }
+
 
 const styles = StyleSheet.create({
   container: {
@@ -137,22 +47,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 0,
     flex: 1,
   },
-  Buttons:{
-    marginTop:100
-  },
   headerText: {
     paddingTop: 50,
     alignItems: 'center',
     fontSize: 30,
   },
-  modalView:{
-    flex:1,
-    backgroundColor:'white',
-    marginVertical:150,
-    marginHorizontal:30,
-    elevation: 2,
-    
-},
   bodyContainer: {
     marginTop: 280,
     paddingHorizontal: 20,
