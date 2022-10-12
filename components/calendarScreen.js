@@ -1,6 +1,7 @@
 import React, { Component,memo,useEffect,useState } from 'react';
+
 import { format,getDay } from "date-fns";
-import { StyleSheet, Text, TextInput, View,TouchableOpacity,ScrollView,Modal,KeyboardAvoidingView} from 'react-native';
+import { StyleSheet, Text, TextInput, View,TouchableOpacity,ScrollView,Modal,KeyboardAvoidingView, TimePickerAndroid} from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
 import { AntDesign } from '@expo/vector-icons';
@@ -14,7 +15,7 @@ const nowdays = today.getDate();
 const week = ['일요일','월요일','화요일','수요일','목요일','금요일','토요일']
 const nowweeks = week[today.getDay()];
 
-const STORAGE_KEY = "@toDos";
+const STORAGE_KEY = '@toDos';
 
 export default  function CalendarView() {
     const [days,setdays] = useState(nowdays)
@@ -32,6 +33,8 @@ export default  function CalendarView() {
         titles,locations,memos
     } = addtitles
     
+   
+
     const onChange = (keyvalue, e) => {
         setaddtitles({
           ...addtitles, 
@@ -66,7 +69,7 @@ export default  function CalendarView() {
         await saveTodos(newToDos)
     }
 
-
+    console.log(STORAGE_KEY)
 
     return (
         <View>
@@ -88,8 +91,7 @@ export default  function CalendarView() {
                         onChangeText = {(e)=>onChange("titles",e)}
                         value={titles}
                         returnKeyType='next'
-                        
-                        
+
                     />
                     <TextInput
                         placeholder='장소'
@@ -106,14 +108,14 @@ export default  function CalendarView() {
                         value={memos}
 
                     />
-
+                    
                     <View style={styles.buttonstyles}>
                         <TouchableOpacity
                             onPress={() => setModalVisible(!modalVisible)}>
                             <Text style={styles.textStyle}>취소</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
-                            onPress={() => {setModalVisible(!modalVisible), addWork()}}>
+                            onPress={() => {setModalVisible(!modalVisible), addWork(),storeHighScore('test',123)}}>
                             <Text style={styles.textStyle}>저장</Text>
                         </TouchableOpacity>
                     </View>
