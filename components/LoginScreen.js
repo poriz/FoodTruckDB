@@ -5,6 +5,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import Checkbox from "expo-checkbox";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+
 //login stage
 import { initializeApp } from 'firebase/app';
 import {
@@ -12,6 +13,8 @@ import {
   onAuthStateChanged,
   FacebookAuthProvider,
   signInWithCredential,
+  signInWithEmailAndPassword,
+  signOut, 
 } from 'firebase/auth';
 import * as Facebook from 'expo-facebook';
 import firebaseConfig from '../config/keys';
@@ -23,7 +26,7 @@ const auth = getAuth(myApp);
 // Listen for authentication state to change.
 onAuthStateChanged(auth, user => {
   if (user != null) 
-      console.log("Logged in with user: ", user);
+      console.log("Logged in with user: ", user.email);
   else 
       console.log('Not logged in')
  });
@@ -42,6 +45,7 @@ const handleAuth=async ()=> {
       // Get the user's name using Facebook's Graph API
       const response = await fetch(`https://graph.facebook.com/me?access_token=${token}`);
       Alert.alert('Logged in!', `Hi ${(await response.json()).name}!`);
+      onAuthStateChanged(auth,(await response.json()).name);
     } else {
       // type === 'cancel'
     }
@@ -52,43 +56,66 @@ const handleAuth=async ()=> {
 }
 
 
-
 const Stack = createNativeStackNavigator();
 export default function  LoginScreen() {
 
+  const [value,setValue] = useState({
+    ID:"",
+    PW:"",
+    error:""
+  })
+  const {
+      ID,PW
+  } = value
 
-  const [userID,setUserID] = useState('');
-  const [userPW,setUserPW] = useState('')
-  const [agree, setAgree] = useState(false);
-
-  const handlePress = () => {
-    if (!userID) {
-      Alert.alert('Email field is required.');
-    }
-
-    if (!userPW) {
-      Alert.alert('Password field is required.');
-    }
-
-    signIn(userID, userPW);
-    setUserID('');
-    setUserPW('');
+  const onChange = (keyvalue, e) => {
+    setValue({
+      ...value, 
+      [keyvalue]: e 
+    });
   };
 
+  async function signIn() {
+    if (value.ID === '' || value.PW === '') {
+      setValue({
+        ...value,
+        error: 'Email and password are mandatory.'
+      })
+      return;
+    }
 
+    try {
+      await signInWithEmailAndPassword(auth, value.ID, value.PW)
+      .then((userCredential))
+      const user = userCredential.user;
+      console.log("loged in")
+    } catch (error) {
+      setValue({
+        ...value,
+        error: error.message,
+      },
+      console.log(error)
+      )
+    }
+  }
+
+
+
+  const [agree, setAgree] = useState(false);
   
     return(
     <View style = {styles.container}>
         <View style ={styles.bodyContainer}>
         <TextInput
           style = {styles.textInput}
-          value = {userID}
-          onchangeText = {(userID) => setUserID(userID)}
+          onChangeText = {(e)=>onChange("ID",e)}
+          value = {ID}
           placeholder= 'ID'/>
         <TextInput
           style = {styles.textInput}
-          value = {userPW}
-          onchangeText = {(userPW) => setUserPW(userPW)}
+          onChangeText = {(e)=>onChange("PW",e)}
+          value = {PW}
+          //secureTextEntry={true}
           placeholder= 'password'/>
         
         <View style={styles.checkboxstyle}>
@@ -102,11 +129,16 @@ export default function  LoginScreen() {
         </View>
         
         </View>
-        <Button style = {styles.buttonstyle} title = "submit" onPress={handleAuth} />
+        <Button style = {styles.buttonstyle} title = "signin" onPress={signIn} />
+        <Button style = {styles.buttonstyle} title = "signout" onPress={()=>signOut(auth)} />
     </View>
 
     )
 }
+//이메일 로그인 버튼
+//import mainContext from '../context/mainContext'
+//const { handleLogin } = useContext(mainContext); 리턴 위에 넣기
+//<Button style = {styles.buttonstyle} title = "submit" onPress={handleAuth} />
 
 
 const styles = StyleSheet.create({
