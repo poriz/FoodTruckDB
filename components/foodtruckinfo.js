@@ -27,8 +27,13 @@ var devicewidth = Dimensions.get('window').width;
 
 const App = () => {
   const [imgActive, setimgActive] = useState(0);
+
+ 
+ 
+ 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+        
       <View style={styles.header}>
         <View style = {styles.square1}>
            <MaterialCommunityIcons name="menu" size={40} color="black" 
@@ -80,7 +85,8 @@ const App = () => {
           </View>
         </ScrollView>
       </View>
-    </View>
+
+    </SafeAreaView>
     
   );
 };
