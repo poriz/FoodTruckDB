@@ -1,31 +1,61 @@
-import React, {useState } from 'react';
-import {Button, StyleSheet, Text, TextInput, View,Alert, Modal, KeyboardAvoidingView, } from 'react-native';
+import React, { Component,useState } from 'react';
+import {Button, StyleSheet, Text, TextInput, View,Alert } from 'react-native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import Checkbox from "expo-checkbox";
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {app} from '../config/keys'
+
+//login stage
+import { initializeApp } from 'firebase/app';
 import {
   getAuth,
   onAuthStateChanged,
+  FacebookAuthProvider,
+  signInWithCredential,
   signInWithEmailAndPassword,
   signOut, 
 } from 'firebase/auth';
 
+import * as Facebook from 'expo-facebook';
+
 const auth = getAuth(app);
 
-export default function LoginScreen({navigation}) {
-
 // Listen for authentication state to change.
-  onAuthStateChanged(auth, user => {
-    if (user != null) {
-        console.log("Logged in with user: ", user.email);
-        changePage(C_user)
-        
+onAuthStateChanged(auth, user => {
+  if (user != null) 
+      console.log("Logged in with user: ", user.email);
+  else 
+      console.log('Not logged in')
+ });
+ 
+//facebook connection
+const handleAuth=async ()=> {
+  try {
+    await Facebook.initializeAsync({
+      appId: '772944797265440',
+    });
+    const { type, token,expirationDate, permissions, declinedPermissions } = 
+    await Facebook.logInWithReadPermissionsAsync({
+      permissions: ['public_profile','email'],
+    });
+    if (type === 'success') {
+      // Get the user's name using Facebook's Graph API
+      const response = await fetch(`https://graph.facebook.com/me?access_token=${token}`);
+      Alert.alert('Logged in!', `Hi ${(await response.json()).name}!`);
+      onAuthStateChanged(auth,(await response.json()).name);
+    } else {
+      // type === 'cancel'
     }
-    else 
-        console.log('Not logged in')
-   });
+} catch ({ message }) {
+    alert(`Facebook Login Error: ${message}`);
+    console.log({message})
+}
+}
+
 //email connection
-  const [C_user,setC_user] = useState()
+const Stack = createNativeStackNavigator();
+export default function  LoginScreen() {
 
   const [value,setValue] = useState({
     ID:"",
@@ -54,9 +84,9 @@ export default function LoginScreen({navigation}) {
 
     try {
       await signInWithEmailAndPassword(auth, value.ID, value.PW)
-      setC_user(auth.currentUser)
+      .then((userCredential))
+      const user = userCredential.user;
       console.log("loged in")
-      
     } catch (error) {
       setValue({
         ...value,
@@ -67,67 +97,40 @@ export default function LoginScreen({navigation}) {
     }
   }
 
-  const [agree, setAgree] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
 
-  const changePage = (C_user1) => {
-    if (C_user1 != null){
-      navigation.reset({
-        index:0,
-        routes:[{name:'Map'}],
-      })
-      //현재 사용 유저의 이메일
-      console.log(C_user.email)
-    }
-  } 
+
+  const [agree, setAgree] = useState(false);
   
     return(
-      <View>
-    <View>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}
-        >
-          <KeyboardAvoidingView 
-              behavior = 'height' 
-              style={styles.modalView}>
-          <View>
-            <TextInput
-              style = {styles.textInput}
-              onChangeText = {(e)=>onChange("ID",e)}
-              value = {ID}
-              placeholder= 'ID'/>
-            <TextInput
-              style = {styles.textInput}
-              onChangeText = {(e)=>onChange("PW",e)}
-              value = {PW}
-              //secureTextEntry={true}
-              placeholder= 'password'/>
-            
-            <View style={styles.checkboxstyle}>
-            <Checkbox
-              value={agree}
-              onValueChange={()=> setAgree(!agree)}
-              color={agree ? "#4630EB": undefined}     
-              />
-              <Text style = {styles.Textstyle}>Remember me?</Text>
-              <Text style = {styles.Textstyle2}>Forgot Password</Text>
-            </View>
-              <Button style = {styles.buttonstyle} title = "signin" onPress={() => [setModalVisible(!modalVisible),signIn()]} />
-            </View>
-          </KeyboardAvoidingView>
-        </Modal>
+    <View style = {styles.container}>
+        <View style ={styles.bodyContainer}>
+        <TextInput
+          style = {styles.textInput}
+          onChangeText = {(e)=>onChange("ID",e)}
+          value = {ID}
+          placeholder= 'ID'/>
+        <TextInput
+          style = {styles.textInput}
+          onChangeText = {(e)=>onChange("PW",e)}
+          value = {PW}
+          //secureTextEntry={true}
+          placeholder= 'password'/>
+        
+        <View style={styles.checkboxstyle}>
+        <Checkbox
+          value={agree}
+          onValueChange={()=> setAgree(!agree)}
+          color={agree ? "#4630EB": undefined}     
+          />
+          <Text style = {styles.Textstyle}>Remember me?</Text>
+          <Text style = {styles.Textstyle2}>Forgot Password</Text>
+        </View>
+        
+        </View>
+        <Button style = {styles.buttonstyle} title = "signin" onPress={signIn} />
+        <Button style = {styles.buttonstyle} title = "signout" onPress={()=>signOut(auth)} />
     </View>
 
-    <View style ={styles.Buttons}>
-      <Button style = {styles.buttonstyle} title = "e-mail login" onPress={() => [setModalVisible(!modalVisible)]} />
-      <Button style = {styles.buttonstyle} title = "signout" onPress={()=>[signOut(auth),]} />
-    </View>
-    </View>
     )
 }
 
@@ -137,22 +140,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 0,
     flex: 1,
   },
-  Buttons:{
-    marginTop:100
-  },
   headerText: {
     paddingTop: 50,
     alignItems: 'center',
     fontSize: 30,
   },
-  modalView:{
-    flex:1,
-    backgroundColor:'white',
-    marginVertical:150,
-    marginHorizontal:30,
-    elevation: 2,
-    
-},
   bodyContainer: {
     marginTop: 280,
     paddingHorizontal: 20,
