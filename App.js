@@ -49,7 +49,7 @@ const App = () => {
       <NavigationContainer>
        <Tab.Navigator
         screenOptions={({route}) => ({
-          tabBarActiveTintColor: '1B2228',
+          tabBarActiveTintColor: '#1B2228',
           tabBarInactiveTintColor: '#C7CDD3',
           headerShown: false,
           tabBarIcon: ({focusd, color, size}) => {

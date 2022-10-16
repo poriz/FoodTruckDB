@@ -1,80 +1,52 @@
 import * as Location from 'expo-location';
-import React,{useRef, useState} from 'react';
+import React,{useEffect, useRef, useState} from 'react';
 import {Button, StyleSheet, Text, Dimensions, View, ScrollView,
   TouchableOpacity, DrawerLayoutAndroid  } from 'react-native';
+
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+import MapView from 'react-native-maps';
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
 const MapScreen = ({navigation}) => {
-  const Stack = createNativeStackNavigator();
-  const drawer = useRef(null);
-  const [drawerPosition, setDrawerPosition] = useState("left");
+  // const [location, setlocation] = useState();
+  // const [ok, setOk] = useState(true);
+  // const ask = async() => {
+  //   const {granted} = await Location.requestForegroundPermissionsAsync();
+  //   if (!granted) {
+  //     setOk(false);
+  //   }
 
-const navigationView = () => (
-    <View style={styles.menu}>
-      <View flexDirection="row">
-      <Text style={styles.menufont}>Main</Text>
-      <TouchableOpacity style={styles.arrow}>
-        <MaterialCommunityIcons name="chevron-right" size={30}/>
-      </TouchableOpacity>
-      </View>
-    
-    <View flexDirection="row">
-    <Text style={styles.menufont}>Calendar</Text>
-    <TouchableOpacity style={styles.arrow}>
-      <MaterialCommunityIcons name="chevron-right" size={30}/>
-    </TouchableOpacity>
-    </View>
+  //   const {coords:{latitude, longitude}} = await Location.getCurrentPositionAsync({accuracy: 5});
+  //   const location = await Location.reverseGeocodeAsync({latitude, longitude}, {useGoogleMaps:(false)});
+  // };
 
-    <View flexDirection="row">
-    <Text style={styles.menufont}>BookMark</Text>
-    <TouchableOpacity style={styles.arrow}>
-      <MaterialCommunityIcons name="chevron-right" size={30} onPress={() => navigation.navigate('BookMark')}/>
-    </TouchableOpacity>
-    </View>
+  //   useEffect(()=> {
+  //   ask();
+  // });
 
-    <View flexDirection="row">
-    <Text style={styles.menufont}>Setting</Text>
-    <TouchableOpacity style={styles.arrow}>
-      <MaterialCommunityIcons name="chevron-right" size={30}/>
-    </TouchableOpacity>
-    </View>
-  </View>
-)
   return(
-    <DrawerLayoutAndroid
-      ref={drawer}
-      drawerWidth={300}
-      drawerPosition={drawerPosition}
-      renderNavigationView={navigationView}>
-
       <View style={styles.Container}>
-        <View style={styles.Case1}>
-          <TouchableOpacity onPress={() => drawer.current.openDrawer()}>
-          <MaterialCommunityIcons style={styles.icon} name="menu" size={30} color="white"/>
-          </TouchableOpacity>
-          <Text style={styles.Favorite}>Main</Text>
-        </View>
         <View style={styles.Case2}>
           <ScrollView>
             <View>
               <Text style={styles.mainFont}>Main Here!</Text>
-              <View style={styles.row}>
-                <TouchableOpacity>
-                  <MaterialCommunityIcons name="target" size={30}/>
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <MaterialCommunityIcons name="arrow-expand-all" size={30}/>
-                </TouchableOpacity>
+                <View style={styles.row}>
+                 <TouchableOpacity>
+                   <MaterialCommunityIcons name="target" size={30}/>
+                 </TouchableOpacity>
+                 <TouchableOpacity>
+                   <MaterialCommunityIcons name="arrow-expand-all" size={30}/>
+                 </TouchableOpacity>
               </View>
             </View>
           </ScrollView>
         </View>
        </View>
-     </DrawerLayoutAndroid>
   );
 };
 

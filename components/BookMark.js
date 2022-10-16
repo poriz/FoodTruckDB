@@ -8,52 +8,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
 const BookMark = (navigation) => {
-  const drawer = useRef(null);
-  const [drawerPosition, setDrawerPosition] = useState("left");
-
-const navigationView = () => (
-  <View style={styles.menu}>
-    <View flexDirection="row">
-    <Text style={styles.menufont}>Main</Text>
-    <TouchableOpacity style={styles.arrow}>
-      <MaterialCommunityIcons name="chevron-right" size={30}/>
-    </TouchableOpacity>
-    </View>
-    <View flexDirection="row">
-    <Text style={styles.menufont}>Calendar</Text>
-    <TouchableOpacity style={styles.arrow}>
-      <MaterialCommunityIcons name="chevron-right" size={30}/>
-    </TouchableOpacity>
-    </View>
-    <View flexDirection="row">
-    <Text style={styles.menufont}>BookMark</Text>
-    <TouchableOpacity style={styles.arrow}>
-      <MaterialCommunityIcons name="chevron-right" size={30}/>
-    </TouchableOpacity>
-    </View>
-    <View flexDirection="row">
-    <Text style={styles.menufont}>Setting</Text>
-    <TouchableOpacity style={styles.arrow}>
-      <MaterialCommunityIcons name="chevron-right" size={30}/>
-    </TouchableOpacity>
-    </View>
-  </View>
-);
 
  return(
-  <DrawerLayoutAndroid
-    ref={drawer}
-    drawerWidth={300}
-    drawerPosition={drawerPosition}
-    renderNavigationView={navigationView}
-    >
     <View style={styles.Container}>
-      <View style={styles.Case1}>
-        <TouchableOpacity onPress={() => drawer.current.openDrawer()}>
-        <MaterialCommunityIcons style={styles.icon} name="menu" size={30} color="white"/>
-        </TouchableOpacity>
-        <Text style={styles.Favorite}>BookMark</Text>
-      </View>
       <View style={styles.Case2}>
         <ScrollView>
           <View style={styles.FoodTruck}>
@@ -69,7 +26,6 @@ const navigationView = () => (
         </ScrollView>
       </View>
      </View>
-   </DrawerLayoutAndroid>
   );
  };
     
