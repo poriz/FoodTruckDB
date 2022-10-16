@@ -157,7 +157,6 @@ export default  function CalendarView() {
                 <Text style = {styles.eventLocation}>{toDos[key].addtitles.locations}</Text>
             </View>)
                 : null
-                
             )
 }
         </ScrollView>
