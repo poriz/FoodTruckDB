@@ -1,62 +1,44 @@
 import * as Location from 'expo-location';
-import React,{useEffect, useRef, useState} from 'react';
+
+import React,{Component, useEffect, useRef, useState,} from 'react';
+
 import {Button, StyleSheet, Text, Dimensions, View, ScrollView,
   TouchableOpacity, DrawerLayoutAndroid  } from 'react-native';
+import { StatusBar} from 'expo-status-bar';
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import MapView from 'react-native-maps';
+import MapView,{Marker, PROVIDER_GOOGLE, MAP_TYPES} from 'react-native-maps';
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
-const MapScreen = ({navigation}) => {
-  // const [location, setlocation] = useState();
-  // const [ok, setOk] = useState(true);
-  // const ask = async() => {
-  //   const {granted} = await Location.requestForegroundPermissionsAsync();
-  //   if (!granted) {
-  //     setOk(false);
-  //   }
-
-  //   const {coords:{latitude, longitude}} = await Location.getCurrentPositionAsync({accuracy: 5});
-  //   const location = await Location.reverseGeocodeAsync({latitude, longitude}, {useGoogleMaps:(false)});
-  // };
-
-  //   useEffect(()=> {
-  //   ask();
-  // });
-
-  return(
+export default class MapScreen extends React.Component{
+  
+  render() {
+    return (
       <View style={styles.Container}>
-        <View style={styles.Case2}>
-          <ScrollView>
-            <View>
-              <Text style={styles.mainFont}>Main Here!</Text>
-                <View style={styles.row}>
-                 <TouchableOpacity>
-                   <MaterialCommunityIcons name="target" size={30}/>
-                 </TouchableOpacity>
-                 <TouchableOpacity>
-                   <MaterialCommunityIcons name="arrow-expand-all" size={30}/>
-                 </TouchableOpacity>
-              </View>
-            </View>
-          </ScrollView>
-        </View>
-       </View>
-  );
+       <MapView style={styles.Case1}
+       initialRegion={{
+       latitude : 35.91395373474155,
+       longitude : 127.73829440215488,
+       latitudeDelta : 5,
+       longitudeDelta : 5,
+       }}/>
+       <StatusBar style = "auto"/>
+      </View>
+    );
+  }
 };
 
 const styles = StyleSheet.create({
   Container: {
     flex:1, 
-    marginTop: 30,
   },
   Case1: {
-    flex: 1,
+    flex: 9,
     padding: 2,
     backgroundColor: "#222222"
   },
@@ -116,5 +98,3 @@ const styles = StyleSheet.create({
     marginTop: 5,
   }
 });
-export default MapScreen;
-

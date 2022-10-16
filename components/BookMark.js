@@ -37,11 +37,11 @@ const styles = StyleSheet.create({
   Case1: {
     flex: 1,
     padding: 2,
-    backgroundColor: "#222222"
   },
   Case2: {
-    flex: 9,
-    backgroundColor: "white"
+    flex: 1,
+    backgroundColor: "white",
+    marginTop: 20
   },
   Favorite:{
     fontSize: 20,

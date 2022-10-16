@@ -8,7 +8,23 @@ import MapScreen from './MapScreen';
 
 const Stack = createNativeStackNavigator();
 
+function homeStack({navigation}){
+  return(
+    <View>
+      <Button
+        title = "Login 열기"
+        onPress={() => navigation.navigate('Login')}
+        />
+      <Button
+        title = "Sign Up 열기"
+        onPress={() => navigation.navigate('SignUp')}
+        />
+      <Button
+        title = "Calendar 열기"
+        onPress={() => navigation.navigate('Calendar')}
+        />
+    </View>
+  );
+}
 
-export default function homeStack() {
-   
-  };
+export default homeStack;
