@@ -2,28 +2,28 @@ import React, { Component,memo,useEffect,useState } from 'react';
 
 import { format,getDay } from "date-fns";
 import { StyleSheet, Text, TextInput, View,TouchableOpacity,ScrollView,Modal,KeyboardAvoidingView, TimePickerAndroid} from 'react-native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createStackNavigator  } from '@react-navigation/stack';
 import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
 import { AntDesign } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 
 
-const Stack = createNativeStackNavigator();
+const Stack = createStackNavigator();
 const today = new Date();
 const nowdays = today.getDate();
 const week = ['일요일','월요일','화요일','수요일','목요일','금요일','토요일']
 const nowweeks = week[today.getDay()];
 
 const STORAGE_KEY = '@toDos';
-
+const dummydata = "dummy"
 export default  function CalendarView() {
     const [days,setdays] = useState(nowdays)
     const [weeks,setweeks] = useState(nowweeks)
     const [modalVisible, setModalVisible] = useState(false);
 
     const [datekey, setdatekey] = useState("")
-    const [toDos,setToDos] = useState({})
+    const [toDos,setToDos] = useState({dummydata})
     const [addtitles,setaddtitles] = useState({
         titles:"",
         locations:"",
@@ -48,7 +48,7 @@ export default  function CalendarView() {
     }
     const loadTodos = async() => {
         const s = await AsyncStorage.getItem(STORAGE_KEY)
-        setToDos(JSON.parse(s));
+        s !== null ? setToDos(JSON.parse(s)) : null;
     }
     useEffect(() => {
         loadTodos();
@@ -147,7 +147,8 @@ export default  function CalendarView() {
         </View>
         
         <ScrollView>
-            {Object.keys(toDos).map((key) => toDos[key].datekey === datekey ?(
+            {
+            Object.keys(toDos).map((key) => toDos[key].datekey === datekey ?(
             <View key = {key} style = {styles.eventcontainerView} >
                 <View style = {styles.addDeletecontainer}>
                     <Text style = {styles.eventTitle}>{toDos[key].addtitles.titles}</Text>
