@@ -6,9 +6,11 @@ import {app} from '../config/keys'
 import {
   getAuth,
   onAuthStateChanged,
+  parseActionCodeURL,
   signInWithEmailAndPassword,
   signOut, 
 } from 'firebase/auth';
+import {homescreen} from '../components/HomeScreen';
 
 const auth = getAuth(app);
 
@@ -74,7 +76,10 @@ export default function LoginScreen({navigation}) {
     if (C_user1 != null){
       navigation.reset({
         index:0,
-        routes:[{name:'Map'}],
+        routes:[
+          {name:'Home'},
+          
+        ],
       })
       //현재 사용 유저의 이메일
       console.log(C_user.email)
