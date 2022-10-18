@@ -1,12 +1,10 @@
-import React,{useCallback, useEffect, useRef, useState} from 'react';
+import React from 'react';
 import {Button, StyleSheet, Text, Dimensions, View, ScrollView,
   TouchableOpacity, DrawerLayoutAndroid, Settings} from 'react-native';
-import { MaterialCommunityIcons, Feather, Ionicons, AntDesign } from '@expo/vector-icons';
+
 
 
 import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-//import { createStackNavigator } from '@react-navigation/native-stack';
 import { createStackNavigator } from '@react-navigation/stack';
 
 
@@ -17,13 +15,12 @@ const Stack = createStackNavigator();
 
 
 const App = () => {
-  
-
     return(
       <NavigationContainer>
       <Stack.Navigator initialRouteName='login'>
         <Stack.Screen name='login' component={LoginScreen} options={{headerShown:false}}/>
         <Stack.Screen name='Home' component={HomeScreen}/>
+
       </Stack.Navigator>
       </NavigationContainer>
 
