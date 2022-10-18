@@ -70,6 +70,8 @@ export default  function CalendarView() {
     }
 
     console.log(STORAGE_KEY)
+    
+
 
     return (
         <View>
@@ -115,7 +117,7 @@ export default  function CalendarView() {
                             <Text style={styles.textStyle}>취소</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
-                            onPress={() => {setModalVisible(!modalVisible), addWork(),storeHighScore('test',123)}}>
+                            onPress={() => {setModalVisible(!modalVisible), addWork()}}>
                             <Text style={styles.textStyle}>저장</Text>
                         </TouchableOpacity>
                     </View>

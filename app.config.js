@@ -1,4 +1,4 @@
-{
+export default {
   "expo": {
     "name": "project2",
     "slug": "project2",
@@ -36,6 +36,7 @@
       "expo-facebook",{
         "userTrackingPermission": false
       }
-    ]]
+    ]],
+  
   }
 }
