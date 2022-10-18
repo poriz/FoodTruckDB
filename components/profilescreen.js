@@ -4,28 +4,35 @@ import {
   Text,
   View,
   Image,
-  TouchableOpacity,} from 'react-native';
+  TouchableOpacity,
+  Button,
+  TouchableHighlight
+} from 'react-native';
 import 'react-native-gesture-handler';
-import { NavigationContainer } from '@react-navigation/native';
+import {NavigationContainer} from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
 const Stack = createNativeStackNavigator();
 
 
-export default class Profile extends Component {
+export default function profilescreen ({navigation,route}) {
 
-  render() {
+  
     return (
       <View style={styles.container}>
           <View style={styles.header}></View>
           <Image style={styles.avatar} source={{uri: 'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMjAyMjBfMjY4%2FMDAxNjQ1Mjk5Nzc2Mjg2.pzyiS5-tXZYmGvpnR1xGOyaO7lfd2M1vCO-qDlxowbQg.wzX3zzmvL_-4PxIED5x46fd3-COb7cU0oTM6c3KL3O0g.JPEG.zxc7421%2F44884218_345707102882519_2446069589734326272_n.jpg&type=sc960_832'}}/>
           <View style={styles.body}>
             <View style={styles.bodyContent}>
+              <Text style={styles.name}>John Doe</Text>
+              <Text style={styles.info}>UX Designer / Mobile developer</Text>
+              <Text style={styles.description}>Lorem ipsum dolor sit amet, saepe sapientem eu nam. Qui ne assum electram expetendis, omittam deseruisse consequuntur ius an,</Text>
+
+
               <TouchableOpacity onPress={()=> console.log("pressed")} style={styles.buttonContainer2}>
-               <Text> User </Text>
+               <Text> User</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={()=> console.log("pressed")} style={styles.buttonContainer}>
-                <Text> 프로필 사진 변경 </Text>
+                <Text>프로필 사진 변경</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={()=> console.log("pressed")}  style={styles.buttonContainer}>
                 <Text> 개인정보 변경</Text>
@@ -34,14 +41,17 @@ export default class Profile extends Component {
                 <Text> 회원탈퇴 </Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={()=> console.log("pressed")} style={styles.buttonContainer}>
-                <Text> 가게 정보 </Text>
+                <Text> 가게 정보</Text>
               </TouchableOpacity>
+
+
+
             </View>
         </View>
       </View>
     );
   }
-}
+
 
 const styles = StyleSheet.create({
   header:{
@@ -65,7 +75,7 @@ const styles = StyleSheet.create({
     fontWeight:'600',
   },
   body:{
-    marginTop: 50,
+    marginTop:40,
   },
   bodyContent: {
     flex: 1,
