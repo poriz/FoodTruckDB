@@ -1,42 +1,77 @@
 import React, { Component,useState } from 'react';
-import {Button, StyleSheet, Text, TextInput, View,TouchableOpacity} from 'react-native';
+import {Button, StyleSheet, Text, TextInput, View,TouchableOpacity,Alert} from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import {app} from '../config/keys'
 
-
+const auth = getAuth(app);
 const Stack = createNativeStackNavigator();
+
+
 export default function  SignUpScreen({navigation}) {
-  const [userID,setUserID] = useState('');
-  const [userPW,setUserPW] = useState('')
-  const [checkpw, setCheckPW] = useState('')
-  const [agree, setAgree] = useState(false);
+  const [value,setValue] = useState({
+    ID:"",
+    PW:"",
+    error:""
+  })
+
+  const {
+    ID,PW
+} = value
+
+const onChange = (keyvalue, e) => {
+  setValue({
+    ...value, 
+    [keyvalue]: e 
+  });
+};
+  async function signUp() {
+    if (value.ID === '' || value.PW === '') {
+      setValue({
+        ...value,
+        error: 'Email and password are mandatory.'
+      })
+      return;
+    }
+
+    try {
+      await createUserWithEmailAndPassword(auth, value.ID, value.PW)
+      Alert.alert('SignIn','success!')
+      navigation.reset({
+        index:0,
+        routes:[
+          {name:'login'},
+        ],
+      })
+      
+    } catch (error) {
+      setValue({
+        ...value,
+        error: error.message,
+      },
+      console.log(error)
+      )
+    }
+  }
+
 
     return(
     <View style = {styles.container}>
         <View style ={styles.bodyContainer}>
         <TextInput
           style = {styles.textInput}
-          onchangeText = {(userID) => setUserID(userID)}
-          placeholder= 'UserName'/>
+          onChangeText = {(e)=>onChange("ID",e)}
+          value = {ID}
+          placeholder= 'E-mail'/>
         <TextInput
           style = {styles.textInput}
-          onchangeText = {(userPW) => setUserPW(userPW)}
+          onChangeText = {(e)=>onChange("PW",e)}
+          value = {PW}
           placeholder= 'Password'/>
-        <TextInput
-          style = {styles.textInput}
-          onchangeText = {(checkpw) => setCheckPW(checkpw)}
-          placeholder= 'Confirm Password'/>
-          <View style={styles.alreadystyle}>
-          <Text>Already have an account? </Text>
-          <TouchableOpacity 
-          style={styles.siginstyle}
-          onPress={() => navigation.navigate('Login')}
-          >
-            <Text style = {styles.signinstyle}>Sign In</Text>
-          </TouchableOpacity>
-          </View>
-        
+     
         </View>
-        <Button style = {styles.buttonstyle} title = "Sign Up" />
+        <Button style = {styles.buttonstyle} title = "Sign Up" 
+          onPress={()=> [signUp()]}/>
     </View>
 
     )

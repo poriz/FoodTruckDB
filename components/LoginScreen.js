@@ -10,7 +10,8 @@ import {
   signInWithEmailAndPassword,
   signOut, 
 } from 'firebase/auth';
-import {homescreen} from '../components/HomeScreen';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+
 
 const auth = getAuth(app);
 
@@ -78,14 +79,16 @@ export default function LoginScreen({navigation}) {
         index:0,
         routes:[
           {name:'Home'},
-          
         ],
       })
       //현재 사용 유저의 이메일
       console.log(C_user.email)
     }
   } 
-  
+  const signUp = () =>{
+    navigation.navigate('SignUp')
+  }
+
     return(
       <View>
     <View>
@@ -100,7 +103,7 @@ export default function LoginScreen({navigation}) {
           <KeyboardAvoidingView 
               behavior = 'height' 
               style={styles.modalView}>
-          <View>
+          <View style = {styles.Modalstyle}>
             <TextInput
               style = {styles.textInput}
               onChangeText = {(e)=>onChange("ID",e)}
@@ -113,15 +116,6 @@ export default function LoginScreen({navigation}) {
               //secureTextEntry={true}
               placeholder= 'password'/>
             
-            <View style={styles.checkboxstyle}>
-            <Checkbox
-              value={agree}
-              onValueChange={()=> setAgree(!agree)}
-              color={agree ? "#4630EB": undefined}     
-              />
-              <Text style = {styles.Textstyle}>Remember me?</Text>
-              <Text style = {styles.Textstyle2}>Forgot Password</Text>
-            </View>
               <Button style = {styles.buttonstyle} title = "signin" onPress={() => [setModalVisible(!modalVisible),signIn()]} />
             </View>
           </KeyboardAvoidingView>
@@ -129,9 +123,17 @@ export default function LoginScreen({navigation}) {
     </View>
 
     <View style ={styles.Buttons}>
-      <Button style = {styles.buttonstyle} title = "e-mail login" onPress={() => [setModalVisible(!modalVisible)]} />
-      <Button style = {styles.buttonstyle} title = "signout" onPress={()=>[signOut(auth),]} />
+      <TouchableOpacity style = {styles.signInbutton} 
+        onPress={() => [setModalVisible(!modalVisible)]}>
+        <Text style={styles.textStyle}>Sign In</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style = {styles.signOutbutton} 
+        onPress={() => [signUp()]}>
+        <Text style={styles.textStyle}>Sign Up</Text>
+      </TouchableOpacity>
+      
     </View>
+      <Button style = {styles.buttonstyle} title = "signout" onPress={()=>[signOut(auth),]} />
     </View>
     )
 }
@@ -171,7 +173,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   buttonstyle:{
-    alignItems:'stretch',
+    alignItems:'baseline',
     flex:1,
     paddingHorizontal: 0,
   },
@@ -192,7 +194,27 @@ const styles = StyleSheet.create({
   },
   checkboxstyle:{
     flexDirection:'row'
+  },
+  Modalstyle:{
+    margin: 10,
+    paddingTop:120
+  },
+  signInbutton:{
+    paddingVertical:5,
+    alignItems:'center',
+    marginTop: 200,
+    backgroundColor:'lightblue',
+    marginHorizontal:80,
+    height:30
+  },
+  signOutbutton:{
+    paddingVertical:5,
+    alignItems:'center',
+    backgroundColor:'lightblue',
+    marginHorizontal:80,
+    height:30
   }
+  
 })
 
 
