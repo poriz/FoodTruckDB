@@ -12,7 +12,13 @@ import MapScreen from '../components/MapScreen';
 import BookMark from '../components/BookMark';
 import CalendarScreen from '../components/calendarScreen';
 import SettingsScreen from '../components/profilescreen';
+import {app} from '../config/keys'
+import {
+  getAuth,
+  onAuthStateChanged, 
+} from 'firebase/auth';
 
+const auth = getAuth(app);
 
 const Tab = createBottomTabNavigator();
 const HomeStack = createStackNavigator();
@@ -21,7 +27,7 @@ const CalendarStack = createStackNavigator();
 const SettingsStack = createStackNavigator();
 
 
-const HomeStackNavigator = () => (
+const HomeStackNavigator = ({navigation,route}) => (
   <HomeStack.Navigator>
     <HomeStack.Screen name="HOME" component={MapScreen}
     options={{
@@ -69,7 +75,7 @@ const CalendarStackNavigator = () => (
     }}/>
   </CalendarStack.Navigator>
 );
-const SettingsStackNavigator = () => (
+const SettingsStackNavigator = ({navigation,route}) => (
   <SettingsStack.Navigator>
     <SettingsStack.Screen name="SETTINGS" component={SettingsScreen}
     options={{
@@ -86,7 +92,26 @@ const SettingsStackNavigator = () => (
   </SettingsStack.Navigator>
 );
 
-const HomeScreen = () => {
+const HomeScreen = ({navigation,route}) => {
+  onAuthStateChanged(auth, user => {
+    if (user == null) {
+        changePage()
+        
+    }
+    else 
+        console.log('logged in')
+   });
+
+  const changePage = () => {
+      navigation.reset({
+        index:0,
+        routes:[
+          {name:'login',},
+        ],
+      })
+
+  } 
+
     return(
       <NavigationContainer independent={true}>
        <Tab.Navigator

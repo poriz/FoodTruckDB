@@ -15,8 +15,7 @@ import MapView,{Marker, PROVIDER_GOOGLE, MAP_TYPES} from 'react-native-maps';
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
-const MapScreen = () =>{
-
+const MapScreen = ({navigation,route}) =>{
 
     return (
         <View style={styles.Container}>

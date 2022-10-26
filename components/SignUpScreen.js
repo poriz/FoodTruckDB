@@ -60,7 +60,10 @@ const onChange = (keyvalue, e) => {
       navigation.reset({
         index:0,
         routes:[
-          {name:'login'},
+          {name:'login',
+          user_pid: auth.currentUser.uid,
+          userinfo: auth.currentUser.photoURL
+        },
         ],
       })
       

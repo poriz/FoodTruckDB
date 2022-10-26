@@ -80,7 +80,8 @@ export default function LoginScreen({navigation}) {
         index:0,
         routes:[
           {name:'Home',
-        user_pid: C_user},
+        user_pid: auth.currentUser.uid,
+        userinfo: auth.currentUser.photoURL},
         ],
       })
       //현재 사용 유저의 이메일
@@ -133,9 +134,7 @@ export default function LoginScreen({navigation}) {
         onPress={() => [signUp()]}>
         <Text style={styles.textStyle}>Sign Up</Text>
       </TouchableOpacity>
-      
     </View>
-      <Button style = {styles.buttonstyle} title = "signout" onPress={()=>[signOut(auth),]} />
     </View>
     )
 }

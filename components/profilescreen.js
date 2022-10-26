@@ -9,15 +9,27 @@ import {
   TouchableHighlight
 } from 'react-native';
 import 'react-native-gesture-handler';
-import {NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer,CommonActions } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import foodtrucksetting from '../components/foodtrucksetting';
+import HomeScreen from './HomeScreen';
+import {
+  getAuth,signOut} from 'firebase/auth';
+import {app} from '../config/keys'
+
+const auth = getAuth(app);
+
 const Stack = createNativeStackNavigator();
+const foodtrucksettingStack = createNativeStackNavigator();
 
 
-export default function profilescreen ({navigation,route}) {
 
-  
-    return (
+export default function Profilescreen ({navigation,route}) {
+  try{
+  var usertype = auth.currentUser.photoURL;
+  switch (usertype) {
+    case 'seller' :
+     return (
       <View style={styles.container}>
           <View style={styles.header}></View>
           <Image style={styles.avatar} source={{uri: 'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMjAyMjBfMjY4%2FMDAxNjQ1Mjk5Nzc2Mjg2.pzyiS5-tXZYmGvpnR1xGOyaO7lfd2M1vCO-qDlxowbQg.wzX3zzmvL_-4PxIED5x46fd3-COb7cU0oTM6c3KL3O0g.JPEG.zxc7421%2F44884218_345707102882519_2446069589734326272_n.jpg&type=sc960_832'}}/>
@@ -37,10 +49,10 @@ export default function profilescreen ({navigation,route}) {
               <TouchableOpacity onPress={()=> console.log("pressed")}  style={styles.buttonContainer}>
                 <Text> 개인정보 변경</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={()=> console.log("pressed")} style={styles.buttonContainer}>
-                <Text> 회원탈퇴 </Text>
+              <TouchableOpacity onPress={()=>[signOut(auth),changePage()]} style={styles.buttonContainer}>
+                <Text> SignOut </Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={()=> console.log("pressed")} style={styles.buttonContainer}>
+              <TouchableOpacity  onPress={()=> console.log("pressed")} style={styles.buttonContainer}>
                 <Text> 가게 정보</Text>
               </TouchableOpacity>
 
@@ -50,7 +62,43 @@ export default function profilescreen ({navigation,route}) {
         </View>
       </View>
     );
+    case 'user' :
+      return  (
+        <View style={styles.container}>
+            <View style={styles.header}></View>
+            <Image style={styles.avatar} source={{uri: 'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMjAyMjBfMjY4%2FMDAxNjQ1Mjk5Nzc2Mjg2.pzyiS5-tXZYmGvpnR1xGOyaO7lfd2M1vCO-qDlxowbQg.wzX3zzmvL_-4PxIED5x46fd3-COb7cU0oTM6c3KL3O0g.JPEG.zxc7421%2F44884218_345707102882519_2446069589734326272_n.jpg&type=sc960_832'}}/>
+            <View style={styles.body}>
+              <View style={styles.bodyContent}>
+              <Text style={styles.name}>John Doe</Text>
+              <Text style={styles.info}>UX Designer / Mobile developer</Text>
+              <Text style={styles.description}>Lorem ipsum dolor sit amet, saepe sapientem eu nam. Qui ne assum electram expetendis, omittam deseruisse consequuntur ius an,</Text>
+
+
+              <TouchableOpacity onPress={()=> console.log("pressed")} style={styles.buttonContainer2}>
+               <Text> User</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={()=> console.log("pressed")} style={styles.buttonContainer}>
+                <Text>프로필 사진 변경</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={()=> console.log("pressed")}  style={styles.buttonContainer}>
+                <Text> 개인정보 변경</Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity onPress={()=>[signOut(auth)]} style={styles.buttonContainer}>
+                <Text> SignOut </Text>
+              </TouchableOpacity>
+              
+              </View>
+             </View>
+          </View>
+    );
+    default :
+    return null;
   }
+} catch(error){
+  
+}
+}
 
 
 const styles = StyleSheet.create({
