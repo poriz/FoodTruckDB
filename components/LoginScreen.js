@@ -20,7 +20,8 @@ export default function LoginScreen({navigation}) {
 // Listen for authentication state to change.
   onAuthStateChanged(auth, user => {
     if (user != null) {
-        console.log("Logged in with user: ", user.email);
+        console.log("Logged in with user: ", user.uid);
+        setC_user(user.uid)
         changePage(C_user)
         
     }
@@ -57,7 +58,7 @@ export default function LoginScreen({navigation}) {
 
     try {
       await signInWithEmailAndPassword(auth, value.ID, value.PW)
-      setC_user(auth.currentUser)
+      
       console.log("loged in")
       
     } catch (error) {
@@ -78,7 +79,8 @@ export default function LoginScreen({navigation}) {
       navigation.reset({
         index:0,
         routes:[
-          {name:'Home'},
+          {name:'Home',
+        user_pid: C_user},
         ],
       })
       //현재 사용 유저의 이메일

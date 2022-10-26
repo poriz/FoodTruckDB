@@ -11,7 +11,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import MapScreen from '../components/MapScreen';
 import BookMark from '../components/BookMark';
 import CalendarScreen from '../components/calendarScreen';
-import SettingsScreen from '../components/SettingsScreen';
+import SettingsScreen from '../components/profilescreen';
 
 
 const Tab = createBottomTabNavigator();
@@ -23,8 +23,9 @@ const SettingsStack = createStackNavigator();
 
 const HomeStackNavigator = () => (
   <HomeStack.Navigator>
-    <HomeStack.Screen name="Home" component={MapScreen}
+    <HomeStack.Screen name="HOME" component={MapScreen}
     options={{
+      headerShown: false,
       headerTransparent: 'True',
       headerBackground:() =>{
     },
@@ -38,8 +39,9 @@ const HomeStackNavigator = () => (
 );
 const BookMarkStackNavigator = () => (
   <BookMarkStack.Navigator>
-    <BookMarkStack.Screen name="BookMark" component={BookMark}
+    <BookMarkStack.Screen name="BOOKMARK" component={BookMark}
     options={{
+      headerShown: false,
       headerTransparent: 'True',
       headerBackground:() =>{
     },
@@ -53,8 +55,9 @@ const BookMarkStackNavigator = () => (
 );
 const CalendarStackNavigator = () => (
   <CalendarStack.Navigator>
-    <CalendarStack.Screen name="Calendar" component={CalendarScreen}
+    <CalendarStack.Screen name="CALENDAR" component={CalendarScreen}
     options={{
+      headerShown: false,
       headerTransparent: 'True',
       headerBackground:() =>{
     },
@@ -68,8 +71,9 @@ const CalendarStackNavigator = () => (
 );
 const SettingsStackNavigator = () => (
   <SettingsStack.Navigator>
-    <SettingsStack.Screen name="Settings" component={SettingsScreen}
+    <SettingsStack.Screen name="SETTINGS" component={SettingsScreen}
     options={{
+      headerShown: false,
       headerTransparent: 'True',
       headerBackground:() =>{
     },
@@ -83,8 +87,6 @@ const SettingsStackNavigator = () => (
 );
 
 const HomeScreen = () => {
-  const home = "Home"
-
     return(
       <NavigationContainer independent={true}>
        <Tab.Navigator

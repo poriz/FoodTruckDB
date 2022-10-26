@@ -1,7 +1,11 @@
 import React, { Component,useState } from 'react';
 import {Button, StyleSheet, Text, TextInput, View,TouchableOpacity,Alert} from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, 
+  createUserWithEmailAndPassword,onAuthStateChanged ,
+  updateProfile 
+} from "firebase/auth";
+import { getDatabase, ref, onValue, set } from 'firebase/database';
 import {app} from '../config/keys'
 
 const auth = getAuth(app);
@@ -9,6 +13,20 @@ const Stack = createNativeStackNavigator();
 
 
 export default function  SignUpScreen({navigation}) {
+  
+  const updateUser= () => {
+    updateProfile(auth.currentUser, {
+      photoURL: "user"
+    }).then(() => {
+      console.log("text:")
+      console.log(auth.currentUser)
+    }).catch((error) => {
+      // An error occurred
+      // ...
+    });
+    
+  }
+
   const [value,setValue] = useState({
     ID:"",
     PW:"",
@@ -35,14 +53,17 @@ const onChange = (keyvalue, e) => {
     }
 
     try {
-      await createUserWithEmailAndPassword(auth, value.ID, value.PW)
+      await createUserWithEmailAndPassword(auth, value.ID, value.PW)    
+      updateUser()
       Alert.alert('SignIn','success!')
+    
       navigation.reset({
         index:0,
         routes:[
           {name:'login'},
         ],
       })
+      
       
     } catch (error) {
       setValue({
