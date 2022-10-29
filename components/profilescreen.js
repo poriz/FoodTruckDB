@@ -16,6 +16,7 @@ import HomeScreen from './HomeScreen';
 import {
   getAuth,signOut} from 'firebase/auth';
 import {app} from '../config/keys'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const auth = getAuth(app);
 
@@ -25,10 +26,22 @@ const foodtrucksettingStack = createNativeStackNavigator();
 
 
 export default function Profilescreen ({navigation,route}) {
+  const changePage = (pagename) => {
+    navigation.navigate(pagename)
+  }
+  const clearAsyncStorage = async () => {
+    try {
+      await AsyncStorage.clear()
+    } catch(e) {
+      // clear error
+    }
+  
+    console.log('Done.')
+  }
   try{
   var usertype = auth.currentUser.photoURL;
   switch (usertype) {
-    case 'seller' :
+    case 'user' :
      return (
       <View style={styles.container}>
           <View style={styles.header}></View>
@@ -46,23 +59,21 @@ export default function Profilescreen ({navigation,route}) {
               <TouchableOpacity onPress={()=> console.log("pressed")} style={styles.buttonContainer}>
                 <Text>프로필 사진 변경</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={()=> console.log("pressed")}  style={styles.buttonContainer}>
+              <TouchableOpacity onPress={()=> [changePage('profilesetting')]}  style={styles.buttonContainer}>
                 <Text> 개인정보 변경</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={()=>[signOut(auth),changePage()]} style={styles.buttonContainer}>
+              <TouchableOpacity onPress={()=>[signOut(auth)]} style={styles.buttonContainer}>
                 <Text> SignOut </Text>
               </TouchableOpacity>
               <TouchableOpacity  onPress={()=> console.log("pressed")} style={styles.buttonContainer}>
                 <Text> 가게 정보</Text>
               </TouchableOpacity>
 
-
-
             </View>
         </View>
       </View>
     );
-    case 'user' :
+    case 'user1' :
       return  (
         <View style={styles.container}>
             <View style={styles.header}></View>
@@ -84,7 +95,7 @@ export default function Profilescreen ({navigation,route}) {
                 <Text> 개인정보 변경</Text>
               </TouchableOpacity>
               
-              <TouchableOpacity onPress={()=>[signOut(auth)]} style={styles.buttonContainer}>
+              <TouchableOpacity onPress={()=>[signOut(auth),clearAsyncStorage()]} style={styles.buttonContainer}>
                 <Text> SignOut </Text>
               </TouchableOpacity>
               
@@ -96,7 +107,7 @@ export default function Profilescreen ({navigation,route}) {
     return null;
   }
 } catch(error){
-  
+
 }
 }
 

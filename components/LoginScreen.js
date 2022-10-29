@@ -30,7 +30,6 @@ export default function LoginScreen({navigation}) {
    });
 //email connection
   const [C_user,setC_user] = useState()
-
   const [value,setValue] = useState({
     ID:"",
     PW:"",

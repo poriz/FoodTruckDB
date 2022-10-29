@@ -12,6 +12,8 @@ import MapScreen from '../components/MapScreen';
 import BookMark from '../components/BookMark';
 import CalendarScreen from '../components/calendarScreen';
 import SettingsScreen from '../components/profilescreen';
+import profileSettings from '../components/ProfileSetting';
+
 import {app} from '../config/keys'
 import {
   getAuth,
@@ -75,8 +77,9 @@ const CalendarStackNavigator = () => (
     }}/>
   </CalendarStack.Navigator>
 );
-const SettingsStackNavigator = ({navigation,route}) => (
-  <SettingsStack.Navigator>
+const SettingsStackNavigator = () => (
+  <SettingsStack.Navigator initialRouteName='SETTINGS'>
+    <SettingsStack.Screen name="profilesetting" component={profileSettings}/>
     <SettingsStack.Screen name="SETTINGS" component={SettingsScreen}
     options={{
       headerShown: false,
@@ -111,7 +114,6 @@ const HomeScreen = ({navigation,route}) => {
       })
 
   } 
-
     return(
       <NavigationContainer independent={true}>
        <Tab.Navigator

@@ -22,7 +22,7 @@ export default {
     },
     "android": {
       "package": "com.comeonfoodtruck.comeonfoodtruck", 
-      "config": {"googleMaps": {"apiKey":"IG2kP62yqlqYjsCihlRNvbDJdjncRl3S96VINKwk"}},
+      "config": {"googleMaps": {"apiKey":"AIzaSyDJv0qwg33vwmMVOr2dPNosfx1iU54vOJo"}},
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
@@ -32,11 +32,7 @@ export default {
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins":[[
-      "expo-facebook",{
-        "userTrackingPermission": false
-      }
-    ]],
+    
   
   }
 }

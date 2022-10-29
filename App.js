@@ -1,6 +1,8 @@
 import React from 'react';
 import {Button, StyleSheet, Text, Dimensions, View, ScrollView,
-  TouchableOpacity, DrawerLayoutAndroid, Settings} from 'react-native';
+  TouchableOpacity, DrawerLayoutAndroid, Settings,Platform} from 'react-native';
+
+  import * as Location from 'expo-location';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -13,8 +15,8 @@ import userinfoScreen from './components/userInfo'
 
 const Stack = createStackNavigator();
 
-
 const App = () => {
+
     return(
       <NavigationContainer>
       <Stack.Navigator initialRouteName='login'>
