@@ -14,7 +14,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import foodtrucksetting from '../components/foodtrucksetting';
 import HomeScreen from './HomeScreen';
 import {
-  getAuth,signOut} from 'firebase/auth';
+  getAuth,signOut,onAuthStateChanged} from 'firebase/auth';
 import {app} from '../config/keys'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -22,7 +22,13 @@ const auth = getAuth(app);
 
 const Stack = createNativeStackNavigator();
 const foodtrucksettingStack = createNativeStackNavigator();
-
+  onAuthStateChanged(auth, user => {
+    if (user != null) {
+        console.log("Logged in with user: ", user.uid);
+    }
+    else 
+        console.log('Not logged in')
+  });
 
 
 export default function Profilescreen ({navigation,route}) {
@@ -41,7 +47,7 @@ export default function Profilescreen ({navigation,route}) {
   try{
   var usertype = auth.currentUser.photoURL;
   switch (usertype) {
-    case 'user' :
+    case 'seller' :
      return (
       <View style={styles.container}>
           <View style={styles.header}></View>
@@ -53,7 +59,7 @@ export default function Profilescreen ({navigation,route}) {
               <Text style={styles.description}>Lorem ipsum dolor sit amet, saepe sapientem eu nam. Qui ne assum electram expetendis, omittam deseruisse consequuntur ius an,</Text>
 
 
-              <TouchableOpacity onPress={()=> console.log("pressed")} style={styles.buttonContainer2}>
+              <TouchableOpacity onPress={()=> [console.log(auth.currentUser.photoURL),console.log("pressed")]} style={styles.buttonContainer2}>
                <Text> User</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={()=> console.log("pressed")} style={styles.buttonContainer}>
@@ -73,7 +79,7 @@ export default function Profilescreen ({navigation,route}) {
         </View>
       </View>
     );
-    case 'user1' :
+    case 'user' :
       return  (
         <View style={styles.container}>
             <View style={styles.header}></View>
@@ -85,7 +91,7 @@ export default function Profilescreen ({navigation,route}) {
               <Text style={styles.description}>Lorem ipsum dolor sit amet, saepe sapientem eu nam. Qui ne assum electram expetendis, omittam deseruisse consequuntur ius an,</Text>
 
 
-              <TouchableOpacity onPress={()=> console.log("pressed")} style={styles.buttonContainer2}>
+              <TouchableOpacity onPress={()=> [console.log(auth.currentUser.photoURL),console.log("pressed")]} style={styles.buttonContainer2}>
                <Text> User</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={()=> console.log("pressed")} style={styles.buttonContainer}>

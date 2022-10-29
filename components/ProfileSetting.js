@@ -34,9 +34,6 @@ var devicewidth = Dimensions.get('window').width;
 
 const Stack = createNativeStackNavigator();
 
-
-
-
 export default function ProfileSetting ({navigation,route}) {
     
     return (
@@ -64,11 +61,6 @@ export default function ProfileSetting ({navigation,route}) {
             </View>
         </View>
     );
-
-    
-
-
-
 
 
 };

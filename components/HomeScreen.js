@@ -1,4 +1,4 @@
-import React,{useCallback, useEffect, useRef, useState} from 'react';
+import React,{useCallback, useRef, useState} from 'react';
 import {Button, StyleSheet, Text, Dimensions, View, ScrollView,
   TouchableOpacity, DrawerLayoutAndroid, Settings,  } from 'react-native';
 import { MaterialCommunityIcons, Feather, Ionicons, AntDesign } from '@expo/vector-icons';
@@ -9,7 +9,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import MapScreen from '../components/MapScreen';
-import BookMark from '../components/BookMark';
+import BookMark from '../components/userInfo';
 import CalendarScreen from '../components/calendarScreen';
 import SettingsScreen from '../components/profilescreen';
 import profileSettings from '../components/ProfileSetting';
@@ -19,6 +19,7 @@ import {
   getAuth,
   onAuthStateChanged, 
 } from 'firebase/auth';
+
 
 const auth = getAuth(app);
 
@@ -78,6 +79,7 @@ const CalendarStackNavigator = () => (
   </CalendarStack.Navigator>
 );
 const SettingsStackNavigator = () => (
+  
   <SettingsStack.Navigator initialRouteName='SETTINGS'>
     <SettingsStack.Screen name="profilesetting" component={profileSettings}/>
     <SettingsStack.Screen name="SETTINGS" component={SettingsScreen}
@@ -96,6 +98,8 @@ const SettingsStackNavigator = () => (
 );
 
 const HomeScreen = ({navigation,route}) => {
+  
+
   onAuthStateChanged(auth, user => {
     if (user == null) {
         changePage()

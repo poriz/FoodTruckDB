@@ -78,6 +78,7 @@ export default function userinfo({navigation,route}) {
             </TouchableOpacity>
 
             <Text>{Truckinfo.TruckNameA}</Text>
+            <Text>{auth.currentUser.photoURL}</Text>
         </View>
       )
 }
