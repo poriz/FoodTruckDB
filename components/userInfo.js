@@ -3,14 +3,14 @@
 import React, { useState } from "react";
 import {Button, StyleSheet, Text, Dimensions, View, ScrollView,
     TouchableOpacity, DrawerLayoutAndroid  } from 'react-native';
-import { getDatabase, ref, child, push, update,set,onValue,query,orderByChild ,orderByKey, get } from 'firebase/database';
+import { getDatabase, ref, child, push, update,set,onValue } from 'firebase/database';
 import { Alert } from "react-native";
 import {app} from '../config/keys'
 import {getAuth,} from 'firebase/auth';
 
 const auth = getAuth(app);
 
-export default function userinfo({navigation,route}) {
+export default function userInfo({navigation,route}) {
     
     const C_user_uid = auth.currentUser.uid
     const [Truckinfo , setInfo] = useState({
@@ -23,26 +23,11 @@ export default function userinfo({navigation,route}) {
       TruckinfoA,TruckName,lattitudeA,longtitudeA
     } = Truckinfo
 
-    function testLA(){
-      const FoodTruckUID = auth.currentUser.uid
-      const dbRef = ref(getDatabase());
-      get(child(dbRef, `FoodTruckInfo/`)).then((snapshot) => {
-        if (snapshot.exists()) {
-          console.log(snapshot.val());
-        } else {
-          console.log("No data available");
-        }
-      }).catch((error) => {
-        console.error(error);
-      });
-      
-    }
-
     function FoodtruckinfoListener() {
       //FoodTruckUID에 푸드트럭의 uid를 삽입한다.
       const FoodTruckUID = auth.currentUser.uid
         const db = getDatabase();
-        const reference = ref(db, 'FoodTruckInfo/'+FoodTruckUID);
+        const reference = ref(db, 'FoodTruckInfo/' + FoodTruckUID);
         onValue(reference, (snapshot) => {
           setInfo({...Truckinfo,
             TruckinfoA : snapshot.val().TruckInfoA,
@@ -90,11 +75,6 @@ export default function userinfo({navigation,route}) {
             <TouchableOpacity style = {styles.textInput2}
                 onPress={() => {[FoodTruckInfoUpdate(Truckinfo)]}}>
                 <Text>정보 입력예제</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style = {styles.textInput2}
-                onPress={() => {[testLA()]}}>
-                <Text> 위치 예제</Text>
             </TouchableOpacity>
 
             <Text>{Truckinfo.TruckNameA}</Text>

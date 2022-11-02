@@ -32,8 +32,6 @@ export default  function CalendarView() {
     const {
         titles,locations,memos
     } = addtitles
-    
-   
 
     const onChange = (keyvalue, e) => {
         setaddtitles({
