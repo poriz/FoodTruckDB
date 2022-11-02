@@ -4,17 +4,20 @@ import {
   Text,
   View,
   Image,
+  Alert,
   TouchableOpacity,
   Button,
   TouchableHighlight
 } from 'react-native';
 import 'react-native-gesture-handler';
-import {NavigationContainer,CommonActions } from '@react-navigation/native';
+import {NavigationContainer} from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import foodtrucksetting from '../components/foodtrucksetting';
 import HomeScreen from './HomeScreen';
+import ProfileSetting from '../components/ProfileSetting';
+
 import {
-  getAuth,signOut,onAuthStateChanged} from 'firebase/auth';
+  getAuth,signOut,onAuthStateChanged,sendPasswordResetEmail,deleteUser  } from 'firebase/auth';
 import {app} from '../config/keys'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -22,29 +25,38 @@ const auth = getAuth(app);
 
 const Stack = createNativeStackNavigator();
 const foodtrucksettingStack = createNativeStackNavigator();
-  onAuthStateChanged(auth, user => {
-    if (user != null) {
-        console.log("Logged in with user: ", user.uid);
-    }
-    else 
-        console.log('Not logged in')
-  });
+
+onAuthStateChanged(auth, user => {
+  if (user != null) {
+      console.log("Logged in with user: ", user.uid);
+  }
+  else 
+      console.log('Not logged in')
+});
 
 
-export default function Profilescreen ({navigation,route}) {
+export default function profilescreen ({navigation,route}) {
+
+  console.log(auth.currentUser.photoURL)
+  const changepw=()=>{
+    sendPasswordResetEmail(auth, auth.currentUser.email)
+    .then(() => {
+        Alert.alert("Password reset email sent!")
+        // ..
+    })
+    .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // ..
+        Alert.alert("No")
+    });
+} 
+
   const changePage = (pagename) => {
-    navigation.navigate(pagename)
-  }
-  const clearAsyncStorage = async () => {
-    try {
-      await AsyncStorage.clear()
-    } catch(e) {
-      // clear error
+      navigation.navigate(pagename)
     }
-  
-    console.log('Done.')
-  }
-  try{
+
+   
   var usertype = auth.currentUser.photoURL;
   switch (usertype) {
     case 'seller' :
@@ -59,21 +71,20 @@ export default function Profilescreen ({navigation,route}) {
               <Text style={styles.description}>Lorem ipsum dolor sit amet, saepe sapientem eu nam. Qui ne assum electram expetendis, omittam deseruisse consequuntur ius an,</Text>
 
 
-              <TouchableOpacity onPress={()=> [console.log(auth.currentUser.photoURL),console.log("pressed")]} style={styles.buttonContainer2}>
-               <Text> User</Text>
+              <TouchableOpacity onPress={()=> console.log("pressed")} style={styles.buttonContainer2}>
+               <Text> seller User</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={()=> console.log("pressed")} style={styles.buttonContainer}>
-                <Text>프로필 사진 변경</Text>
+              <TouchableOpacity onPress={()=> changepw()}  style={styles.buttonContainer}>
+                <Text> 비밀번호 변경</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={()=> [changePage('profilesetting')]}  style={styles.buttonContainer}>
-                <Text> 개인정보 변경</Text>
+              <TouchableOpacity onPress={()=> signOut(auth) } style={styles.buttonContainer}>
+                <Text> 로그아웃 </Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={()=>[signOut(auth)]} style={styles.buttonContainer}>
-                <Text> SignOut </Text>
-              </TouchableOpacity>
-              <TouchableOpacity  onPress={()=> console.log("pressed")} style={styles.buttonContainer}>
+              <TouchableOpacity  onPress={()=> changePage("foodtrucksetting")} style={styles.buttonContainer}>
                 <Text> 가게 정보</Text>
               </TouchableOpacity>
+
+
 
             </View>
         </View>
@@ -91,19 +102,16 @@ export default function Profilescreen ({navigation,route}) {
               <Text style={styles.description}>Lorem ipsum dolor sit amet, saepe sapientem eu nam. Qui ne assum electram expetendis, omittam deseruisse consequuntur ius an,</Text>
 
 
-              <TouchableOpacity onPress={()=> [console.log(auth.currentUser.photoURL),console.log("pressed")]} style={styles.buttonContainer2}>
-               <Text> User</Text>
+              <TouchableOpacity onPress={()=> console.log("pressed")} style={styles.buttonContainer2}>
+               <Text> customer User</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={()=> console.log("pressed")} style={styles.buttonContainer}>
-                <Text>프로필 사진 변경</Text>
+              <TouchableOpacity onPress={()=> changepw()}  style={styles.buttonContainer}>
+                <Text> 비밀번호 변경</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={()=> console.log("pressed")}  style={styles.buttonContainer}>
-                <Text> 개인정보 변경</Text>
+              <TouchableOpacity  onPress={()=> [signOut(auth)]} style={styles.buttonContainer}>
+                <Text> 로그아웃 </Text>
               </TouchableOpacity>
               
-              <TouchableOpacity onPress={()=>[signOut(auth),clearAsyncStorage()]} style={styles.buttonContainer}>
-                <Text> SignOut </Text>
-              </TouchableOpacity>
               
               </View>
              </View>
@@ -112,9 +120,6 @@ export default function Profilescreen ({navigation,route}) {
     default :
     return null;
   }
-} catch(error){
-
-}
 }
 
 

@@ -16,7 +16,7 @@ export default function  SignUpScreen({navigation}) {
   
   const updateUser= () => {
     updateProfile(auth.currentUser, {
-      photoURL: "seller"
+      photoURL: "user"
     }).then(() => {
       console.log("text:")
       console.log(auth.currentUser)
