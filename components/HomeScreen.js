@@ -13,7 +13,6 @@ import BookMark from '../components/BookMark';
 import CalendarScreen from '../components/calendarScreen';
 import SettingsScreen from '../components/profilescreen';
 import profileSettings from '../components/ProfileSetting';
-import Foodtrucksetting from '../components/foodtrucksetting'
 import foodtruckinfo from '../components/foodtruckinfo'
 
 import {app} from '../config/keys'
@@ -90,7 +89,7 @@ const CalendarStackNavigator = () => (
 const SettingsStackNavigator = () => (
   
   <SettingsStack.Navigator initialRouteName='SETTINGS'>
-    <SettingsStack.Screen name="foodtrucksetting" component={Foodtrucksetting}/>
+    <SettingsStack.Screen name="foodtrucksetting" component={foodtruckinfo}/>
     <SettingsStack.Screen name="profilesetting" component={profileSettings}/>
     <SettingsStack.Screen name="SETTINGS" component={SettingsScreen}
     options={{

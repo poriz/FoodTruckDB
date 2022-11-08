@@ -42,7 +42,8 @@ const MapScreen = ({navigation}) => {
   const [longitude, setLongitude] = useState(127.0016);
 
   const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+  const toggleSwitch = () => [setIsEnabled(previousState => !previousState),
+                                pmArea()];
 
   const [Truckinfo , setInfo] = useState({
     TruckinfoA:"",
@@ -58,26 +59,33 @@ const MapScreen = ({navigation}) => {
   const [location2, setLocation2] = useState("");
     
   const [keys2, setkeys2] = useState("")
-
+  const dbRef = ref(getDatabase());
+  
   function testLA(){
-    const dbRef = ref(getDatabase());
     get(child(dbRef, 'FoodTruckInfo/')).then((snapshot) => {
       if (snapshot.exists()) {
         //console.log(Object.keys(snapshot.val()));
         
         setLocation2(Object.values(snapshot.val()))
+        console.log(location2)
         setkeys2(Object.keys(snapshot.val()))
-        
+      } else {
+        console.log("No data available");
+      }
+    }).catch((error) => {
+      console.error(error);
+    });
+  }
+
+  const [pmareaA,setpmareaA] = useState("")
+
+  function pmArea(){
+    get(child(dbRef, 'permittedArea/')).then((snapshot) => {
+      if (snapshot.exists()) {
+        //console.log(Object.keys(snapshot.val()));
+        setpmareaA(Object.values(snapshot.val()))
+        console.log(pmareaA)
         // const marker = () =>{
-        for(let i=0 ; i<Object.values(snapshot.val()).length ; i++){
-            <MapView.Marker
-            title={Object.values(snapshot.val()).TruckNameA}
-            coordinate={{
-              latitude: Object.values(snapshot.val()).lattitudeA,
-              longitude: Object.values(snapshot.val()).longtitudeA
-            }}> 
-            </MapView.Marker>
-          }
       } else {
         console.log("No data available");
       }
@@ -106,7 +114,7 @@ const MapScreen = ({navigation}) => {
       setLocation(location.coords);
 
       testLA();
-      
+
       // await delay(1000)
       // console.log(location2)
     })();
@@ -164,22 +172,34 @@ const MapScreen = ({navigation}) => {
                   longitude: Number(val.longtitudeA),
                 }}
                 onPress={()=>[console.log('push'),
-                navigation.navigate('fdinfo')
+                navigation.navigate('fdinfo'
+                ,{
+                  NameA : String(val.TruckNameA),
+                  infoA:String(val.TruckinfoA),
+                  lattitudeA: Number(val.lattitudeA),
+                  longtitudeA:Number(val.longtitudeA),
+                  menu:(val.menu)
+                })
                 ]
                   }
                 />)
               })}
-
-                <View>
-                  {isEnabled && 
+                {isEnabled &&
+                  pmareaA.map((val,i)=>{
+                    return(
+                      <View>
                     <MapView.Circle
+                    key={String(val.lattitudeA)+i}
                     center={{
-                      latitude:36.6210,
-                      longitude:127.2900}}
+                      latitude:Number(val.lattitudeA),
+                      longitude:Number(val.longtitudeA)}}
                     radius={300}
                     fillColor="rgba(20, 255, 161, 0.3)"
-                    strokeColor="#6ccad0"/>}
-                </View>
+                    strokeColor="#6ccad0"/>
+                    </View>)
+                  })
+                    }
+                
 
               </MapView>
 
@@ -191,6 +211,7 @@ const MapScreen = ({navigation}) => {
                   style={styles.switchStyle}
                   onValueChange={toggleSwitch}
                   value={isEnabled}
+                  
                   />
               </View>
           </View>

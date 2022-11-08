@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -20,6 +20,10 @@ import {
   getAuth,signOut,onAuthStateChanged,sendPasswordResetEmail,deleteUser  } from 'firebase/auth';
 import {app} from '../config/keys'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useSafeAreaFrame } from 'react-native-safe-area-context';
+import { getDatabase, ref, child, push, update, 
+  set, onValue, query, orderByChild ,orderByKey,
+  get } from 'firebase/database';
 
 const auth = getAuth(app);
 
@@ -35,7 +39,36 @@ onAuthStateChanged(auth, user => {
 });
 
 
+
 export default function profilescreen ({navigation,route}) {
+
+  const dbRef = ref(getDatabase());
+  
+const [location2 , setLocation2] = useState("")
+
+function testLA(){
+  get(child(dbRef, 'FoodTruckInfo/')).then((snapshot) => {
+    if (snapshot.exists()) {
+      console.log(Object.keys(snapshot.val()));
+      Object.keys(snapshot.val()).map((uid,j)=>{
+        if (uid === auth.currentUser.uid){
+          setLocation2(Object.values(snapshot.val()))
+          console.log(location2)
+
+        }
+      })
+      
+    } else {
+      console.log("No data available");
+    }
+  }).catch((error) => {
+    console.error(error);
+  });
+}
+useEffect(()=>{
+  testLA()
+},[])
+
 
   console.log(auth.currentUser.photoURL)
   const changepw=()=>{
@@ -55,6 +88,20 @@ export default function profilescreen ({navigation,route}) {
   const changePage = (pagename) => {
       navigation.navigate(pagename)
     }
+
+  const changefoodinfo = () =>{
+    location2.map((val,i)=>{
+      navigation.navigate('foodtrucksetting'
+      ,{
+        NameA : String(val.TruckNameA),
+        infoA:String(val.TruckinfoA),
+        lattitudeA: Number(val.lattitudeA),
+        longtitudeA:Number(val.longtitudeA),
+        menu:(val.menu)
+      })
+    })
+    
+  }
 
    
   var usertype = auth.currentUser.photoURL;
@@ -80,7 +127,7 @@ export default function profilescreen ({navigation,route}) {
               <TouchableOpacity onPress={()=> signOut(auth) } style={styles.buttonContainer}>
                 <Text> 로그아웃 </Text>
               </TouchableOpacity>
-              <TouchableOpacity  onPress={()=> changePage("foodtrucksetting")} style={styles.buttonContainer}>
+              <TouchableOpacity  onPress={()=> changefoodinfo()} style={styles.buttonContainer}>
                 <Text> 가게 정보</Text>
               </TouchableOpacity>
 

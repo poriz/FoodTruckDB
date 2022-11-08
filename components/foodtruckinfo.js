@@ -22,7 +22,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {  useIsFocused } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import MapView,{Marker, PROVIDER_GOOGLE, MAP_TYPES, Polygon} from 'react-native-maps';
 import {app} from '../config/keys'
 import {
   getAuth,
@@ -44,7 +44,7 @@ var devicewidth = Dimensions.get('window').width;
 
 const App = ({navigation,route}) => {
 
-
+console.log(route.params.NameA)
 const [imgActive, setimgActive] = useState(0);
 //여기는 이전 페이지에서 넘겨 받을거임.
 
@@ -53,13 +53,26 @@ const [working, setWorking] = useState(true);
 const [token1, settoken1] = useState("allow");
 const [toDos,setToDos] = useState({dummydata})
 
+const[information2, setinformation2] = useState({
+  name: route.params.NameA,
+  info: route.params.infoA,
+  lattitude: route.params.lattitudeA,
+  longtitude: route.params.longtitudeA,
+})
+
+const [menuA,setmenu] = useState(Object.values(route.params.menu))
+
+console.log(menuA)
+
+
 const [addfd,setaddfd] = useState({
-    name:"testName",
-    info:"test information"
+    name: information2.name,
+    info: information2.info
 })
  const{
     name,info
  } = addfd
+
  const work = () => setWorking(true);
 
  const saveTodos = async(toSave) =>{
@@ -107,23 +120,26 @@ const addWork = async() =>{
   return (
     <SafeAreaView style={styles.container}>
         
-      <View style={styles.boxContainer}> 
-        <View style={styles.box}>
-          <View style= {styles.favoritebox}>
-            <TouchableOpacity>
-              <MaterialCommunityIcons name="heart" size={40} 
-              onPress={() => addWork() }/>
-            </TouchableOpacity>
-          </View>
-          <Text>지도 </Text>
-        </View>
-      </View>
-      
+        <MapView style={{ flex: 0.8}}
+              showsMyLocationButton={true}
+              showsUserLocation={true}
+               initialRegion={{
+                 latitude:information2.lattitude,
+                 longitude:information2.longtitude,
+                 latitudeDelta: 0.5,
+                 longitudeDelta: 0.5,
+               }}>
+        </MapView>
+      <View style={styles.flexbox}>
 
-      <View>
          <Text style={styles.text}>
            {addfd.name}
         </Text>
+
+        <TouchableOpacity>
+              <MaterialCommunityIcons name="heart" size={40} 
+              onPress={() => addWork() }/>
+        </TouchableOpacity>
       </View>
         
       <View>  
@@ -132,23 +148,19 @@ const addWork = async() =>{
         </Text>
       </View> 
 
-      <View style={styles.menu}>
+      <View style={styles.menus}>
         <ScrollView>
-          <View style={styles.firstView}>
-            <Text style={styles.headerText}>First Menu</Text>
-          </View>
+        { 
+          menuA.map((val,i)=>{
+            return(
+              <View style={styles.firstView}>
+            <Text style={styles.headerText}>{val}</Text>
+            </View>
+            )
+          })
+        }
 
-          <View style={styles.secondView}>
-            <Text style={styles.headerText}>Second Menu</Text>
-          </View>
 
-          <View style={styles.thirdView}>
-            <Text style={styles.headerText}>Third Menu</Text>
-          </View>
-
-          <View style={styles.forthView}>
-            <Text style={styles.headerText}>Forth Menu</Text>
-          </View>
         </ScrollView>
       </View>
 
@@ -224,8 +236,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
-
-
   },
   secondView: {
     height:100,
@@ -254,7 +264,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
 
   },
-  menu: {
+  menus: {
     width:deviceWidth,
     flex: 1,
     justifyContent: "center",
@@ -264,6 +274,9 @@ const styles = StyleSheet.create({
     fontSize: 20,    
     color: 'white',
     fontWeight: "bold"
+  },
+  flexbox: {
+    flexDirection: "row"
   },
 
 });
