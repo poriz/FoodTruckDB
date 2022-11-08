@@ -4,16 +4,17 @@ import {Button, StyleSheet, Text, Dimensions, View, ScrollView,
 import { MaterialCommunityIcons, Feather, Ionicons, AntDesign } from '@expo/vector-icons';
 import Entypo from '@expo/vector-icons/Entypo'
 
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, StackActions } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import MapScreen from '../components/MapScreen';
-import BookMark from '../components/userInfo';
+import BookMark from '../components/BookMark';
 import CalendarScreen from '../components/calendarScreen';
 import SettingsScreen from '../components/profilescreen';
 import profileSettings from '../components/ProfileSetting';
 import Foodtrucksetting from '../components/foodtrucksetting'
+import foodtruckinfo from '../components/foodtruckinfo'
 
 import {app} from '../config/keys'
 import {
@@ -32,7 +33,10 @@ const SettingsStack = createStackNavigator();
 
 
 const HomeStackNavigator = ({navigation,route}) => (
+
+  
   <HomeStack.Navigator>
+    
     <HomeStack.Screen name="HOME" component={MapScreen}
     options={{
       headerShown: false,
@@ -44,8 +48,12 @@ const HomeStackNavigator = ({navigation,route}) => (
           <Text>{children}</Text>
         </View>
       ),
-    }}/>
+    }}
+    />
+   <HomeStack.Screen name="fdinfo" component={foodtruckinfo}/>
   </HomeStack.Navigator>
+  
+  
 );
 const BookMarkStackNavigator = () => (
   <BookMarkStack.Navigator>
@@ -100,7 +108,7 @@ const SettingsStackNavigator = () => (
 );
 
 const HomeScreen = ({navigation,route}) => {
-  
+
 
   onAuthStateChanged(auth, user => {
     if (user == null) {

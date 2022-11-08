@@ -1,32 +1,95 @@
-import React,{useRef, useState} from 'react';
+import React,{useRef, useState,useEffect} from 'react';
 import {Button, StyleSheet, Text, Dimensions, View, ScrollView,
-  TouchableOpacity, DrawerLayoutAndroid  } from 'react-native';
+  TouchableOpacity, DrawerLayoutAndroid,  } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useIsFocused } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
+const STORAGE_KEY = '@myfd';
+const dummydata = "dummy"
 
-const BookMark = (navigation) => {
+const BookMark = ({navigation}) => {
+    const [working, setWorking] = useState(true);
+    const [toDos,setToDos] = useState({dummydata})
+    const [addfd,setaddfd] = useState({
+        name:"",
+        info:""
+    })
+    const {
+        name,info
+    } = addfd
+    const work = () => setWorking(true);
+
+    const onChange = (keyvalue, e) => {
+      setaddfd({
+          ...addfd, 
+          [keyvalue]: e 
+        });
+      };
+    
+    const saveTodos = async(toSave) =>{
+        const s =JSON.stringify(toSave)
+        await AsyncStorage.setItem(STORAGE_KEY,s)
+    }
+    const loadTodos = async() => {
+        const s = await AsyncStorage.getItem(STORAGE_KEY)
+        s !== null ? setToDos(JSON.parse(s)) : null;
+    }
+    const isFocused = useIsFocused();
+
+ 
+    useEffect(() => {
+      if (isFocused) console.log('Focused!!');
+      loadTodos()
+    }, [isFocused]
+    );
+
+
+
+    const deleteWork = async(key) =>{
+        const newToDos = {...toDos}
+        delete newToDos[key]
+        setToDos(newToDos)
+        await saveTodos(newToDos)
+    }
+
+    console.log(STORAGE_KEY)
+    
+
+
+
 
  return(
     <View style={styles.Container}>
       <View style={styles.Case2}>
-        <ScrollView>
-          <View style={styles.FoodTruck}>
+      <View style={styles.FoodTruck}>
               <View style= {styles.row}>
-                <Text style={styles.searchList}>FoodTruckName</Text>
-                <TouchableOpacity>
-                  <MaterialCommunityIcons name="delete-outline" size={30} color="black"/>
-                </TouchableOpacity>
+                <Text style={styles.searchList}>BookMarks</Text>
               </View>
-              <Text style={styles.Location}>FoodTruckLocation</Text>
               <Text style={styles.textRegister}> ────────────────────────────────────</Text>
           </View>
+        <ScrollView>
+        {Object.keys(toDos).map((key) => (toDos[key].working === working)?(
+            <View key = {key} style = {styles.FoodTruck} >
+                <View style = {styles.row}>
+                    <Text style = {styles.searchList}>{toDos[key].addfd.name}</Text>
+                    <TouchableOpacity onPress={() => deleteWork(key)}>
+                    <MaterialCommunityIcons name="delete-outline" size={30} color="black"/>
+                    </TouchableOpacity>
+                </View>
+                <Text style = {styles.Location}>{toDos[key].addfd.info}</Text>
+            </View>)
+                : null
+            )
+}
+
         </ScrollView>
       </View>
      </View>
   );
+
  };
     
 const styles = StyleSheet.create({

@@ -2,7 +2,7 @@ import React,{Component, useEffect, useState,} from 'react';
 import Device from 'expo-device';
 
 import {Button, StyleSheet, Text, Dimensions, View, ScrollView,
-  TouchableOpacity, DrawerLayoutAndroid, Alert, Switch, Modal} from 'react-native';
+  TouchableOpacity, DrawerLayoutAndroid, Alert, Switch, Modal,} from 'react-native';
 import { StatusBar} from 'expo-status-bar';
 import {AutocompleteDropdown} from 'react-native-autocomplete-dropdown';
 
@@ -34,7 +34,7 @@ const auth = getAuth(app);
 // const foodTruckUser = query(ref(db,'FoodTruckInfo/'+ FoodTruckUID), 
 //                       orderByChild('FoodTruckInfo'));
 
-const MapScreen = (props) => {
+const MapScreen = ({navigation}) => {
 
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
@@ -56,14 +56,18 @@ const MapScreen = (props) => {
 
   
   const [location2, setLocation2] = useState("");
+    
+  const [keys2, setkeys2] = useState("")
 
   function testLA(){
     const dbRef = ref(getDatabase());
     get(child(dbRef, 'FoodTruckInfo/')).then((snapshot) => {
       if (snapshot.exists()) {
-        // console.log(snapshot.val());
+        //console.log(Object.keys(snapshot.val()));
         
         setLocation2(Object.values(snapshot.val()))
+        setkeys2(Object.keys(snapshot.val()))
+        
         // const marker = () =>{
         for(let i=0 ; i<Object.values(snapshot.val()).length ; i++){
             <MapView.Marker
@@ -122,6 +126,7 @@ const MapScreen = (props) => {
       case 'seller':
         
         return (
+          {testLA},
           <View style={styles.Container}>
             <MapView  
               style={styles.Case1}
@@ -148,7 +153,7 @@ const MapScreen = (props) => {
               draggable/>
               
                 {location2.map((val,i)=>{
-                console.log(val.longtitudeA);
+                //console.log(val);
                 return(
                 <Marker
                 key={String(val.TruckNameA)+i}
@@ -158,6 +163,10 @@ const MapScreen = (props) => {
                   latitude: Number(val.lattitudeA),
                   longitude: Number(val.longtitudeA),
                 }}
+                onPress={()=>[console.log('push'),
+                navigation.navigate('fdinfo')
+                ]
+                  }
                 />)
               })}
 

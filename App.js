@@ -12,6 +12,7 @@ import LoginScreen from './components/LoginScreen';
 import HomeScreen from './components/HomeScreen';
 import SignUpScreen from './components/SignUpScreen'
 import userinfoScreen from './components/userInfo'
+import fdinfo from './components/foodtruckinfo'
 
 const Stack = createStackNavigator();
 
@@ -24,6 +25,7 @@ const App = () => {
         <Stack.Screen name='Home' component={HomeScreen} options ={{headerShown:false}}/>
         <Stack.Screen name='SignUp' component={SignUpScreen}/>
         <Stack.Screen name='userinfo' component={userinfoScreen}/>
+        <Stack.Screen name='fdinfo' component={fdinfo}/>
 
       </Stack.Navigator>
       </NavigationContainer>
