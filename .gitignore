@@ -76,3 +76,5 @@ dist/
 
 # Firebase SDK
 config/keys.js
+
+package-lock.json
